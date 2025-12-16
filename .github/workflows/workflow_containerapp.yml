@@ -5,7 +5,8 @@ name: Build and Deploy to Container App
 
 on:
   workflow_dispatch:
-
+permissions:
+  id-token: write
 jobs:
   build:
 
@@ -26,3 +27,9 @@ jobs:
         az acr login --name microckregistrymhuser04 --username ${{ secrets.ACR_USERNAME }} --password ${{ secrets.ACR_PASSWORD }} &&
         docker build -t microckregistrymhuser04.azurecr.io/microhackapp:1 -f Dockerfile . &&
         docker push microckregistrymhuser04.azurecr.io/microhackapp:1
+    - name: Login to Azure
+      uses: azure/login@v2
+      with:
+        client-id: ${{ secrets.AZURE_CLIENT_ID }}
+        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
